@@ -1,7 +1,7 @@
 //creating key pair
 aws ec2 create-key-pair --key-name task6 --query "KeyMaterial"> task6.pem
 
-//craeting security group 
+//creating security group 
 aws ec2 create-security-group --group-name task6 --description "security group for task6" 
 
 //inbound rules for security group
