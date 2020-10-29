@@ -1,0 +1,38 @@
+//creating key pair
+aws ec2 create-key-pair --key-name task6 --query "KeyMaterial"> task6.pem
+
+//craeting security group 
+aws ec2 create-security-group --group-name task6 --description "security group for task6" 
+
+//inbound rules for security group
+aws ec2 authorize-security-group-ingress --group-id sg-07e6f7028f2935fb6 --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-ingress --group-id sg-07e6f7028f2935fb6 --protocol tcp --port 80 --cidr 0.0.0.0/0
+
+//starting instance 
+aws ec2 run-instances   --security-group-ids sg-07e6f7028f2935fb6  --instance-type t2.micro --image-id ami-0e306788ff2473ccb   --key-name task6
+
+//creating a new volume
+aws ec2 create-volume --volume-type gp2 --size 10 --availability-zone ap-south-1a
+
+//attaching volume to instance
+aws ec2  attach-volume   --volume-id vol-0e50b553e17b01a91  --instance-id i-0774faaa69d38f5f9 --device sdf 
+
+//creating S3 bucket
+aws s3api create-bucket --bucket arth-task6 --region ap-south-1 --acl public-read --create-bucket-configuration LocationConstraint=ap-south-1
+
+//adding object to the bucket
+aws s3 cp C:\Users\yalla\Desktop\LW.jpg s3://arth-task6 --acl public-read
+
+//creating distribution for s3 object
+aws cloudfront create-distribution --origin-domain-name arth-task6.s3.amazonaws.com
+
+//to create a partition,format and mount it to /var/www/html
+
+fdisk /dev/xvdf=to go into a partition
+n=creates a new partition
+p=creates primary partition
+# select the size of the partitions
+w=saves the partition info
+
+mkfs.ext4 /dev/xvdf1=to format a partition
+mount /dev/xvdf1 /var/www/html=to mount the partition
